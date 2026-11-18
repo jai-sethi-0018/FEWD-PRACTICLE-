@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jai Sethi - Registration Form Validation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .form-container {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #334155;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input.valid {
+            border-color: #16a34a;
+        }
+        input.invalid {
+            border-color: #dc2626;
+        }
+        .error-msg {
+            color: #dc2626;
+            font-size: 12.5px;
+            margin-top: 5px;
+            min-height: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0369a1;
+        }
+        #successMsg {
+            text-align: center;
+            color: #16a34a;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Student Registration</h2>
+        <form id="regForm" novalidate>
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" placeholder="Enter your full name">
+                <div class="error-msg" id="nameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="example@domain.com">
+                <div class="error-msg" id="emailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" placeholder="10-digit mobile number">
+                <div class="error-msg" id="phoneError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Min 8 chars, 1 uppercase, 1 number">
+                <div class="error-msg" id="passwordError"></div>
+            </div>
+
+            <button type="submit">Register</button>
+            <div id="successMsg"></div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById("regForm");
+        const fullName = document.getElementById("fullName");
+        const email = document.getElementById("email");
+        const phone = document.getElementById("phone");
+        const password = document.getElementById("password");
+
+        // Regular Expressions
+        const nameRegex = /^[a-zA-Z\s]{3,}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[6-9]\d{9}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+        function validateName() {
+            const error = document.getElementById("nameError");
+            if (!nameRegex.test(fullName.value.trim())) {
+                error.textContent = "Name must be at least 3 letters (alphabets only).";
+                fullName.className = "invalid";
+                return false;
+            }
+            error.textContent = "";
+            fullName.className = "valid";
+            return true;
+        }
+
+        function validateEmail() {
+            const error = document.getElementById("emailError");
+            if (!emailRegex.test(email.value.trim())) {
+                error.textContent = "Please enter a valid email address.";
+                email.className = "invalid";
+                return false;
+            }
+            error.textContent = "";
+            email.className = "valid";
+            return true;
+        }
+
+        function validatePhone() {
+            const error = document.getElementById("phoneError");
+            if (!phoneRegex.test(phone.value.trim())) {
+                error.textContent = "Enter a valid 10-digit Indian mobile number.";
+                phone.className = "invalid";
+                return false;
+            }
+            error.textContent = "";
+            phone.className = "valid";
+            return true;
+        }
+
+        function validatePassword() {
+            const error = document.getElementById("passwordError");
+            if (!passwordRegex.test(password.value)) {
+                error.textContent = "Password must be 8+ chars with at least 1 uppercase & 1 number.";
+                password.className = "invalid";
+                return false;
+            }
+            error.textContent = "";
+            password.className = "valid";
+            return true;
+        }
+
+        // Real-time validation listeners (triggers as user types)
+        fullName.addEventListener("input", validateName);
+        email.addEventListener("input", validateEmail);
+        phone.addEventListener("input", validatePhone);
+        password.addEventListener("input", validatePassword);
+
+        // Form submission validation
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const isNameValid = validateName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+            const isPasswordValid = validatePassword();
+
+            const successMsg = document.getElementById("successMsg");
+            if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid) {
+                successMsg.textContent = "Registration Successful!";
+            } else {
+                successMsg.textContent = "";
+            }
+        });
+    </script>
+
+</body>
+</html>
