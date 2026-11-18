@@ -1,0 +1,6 @@
+{
+  "name": "p8-es6-registration-dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCA FEWD Practical 8 - ES6 Modules, Promises & Async/Await"
+}
